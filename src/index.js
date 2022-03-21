@@ -1,71 +1,76 @@
-const { ApolloServer, gql } = require('apollo-server');
+const { ApolloServer } = require('apollo-server');
 const { PrismaClient } = require('@prisma/client');
 
-const prisma = new PrismaClient();
+const schema = require('./schema');
 
-const typeDefs = gql`
-  scalar DateTime
+const prisma = new PrismaClient({ log: ['query'] });
 
-  type User {
-    id: Int
-    nome: String
-    email: String
-    createdAt: DateTime
-    posts: [Post]
-  }
+// using SDL language
+// const typeDefs = gql`
+//   scalar DateTime
 
-  type Post {
-    id: Int
-    titulo: String
-    conteudo: String
-  }
+//   type User {
+//     id: Int
+//     nome: String
+//     email: String
+//     createdAt: DateTime
+//     posts: [Post]
+//   }
 
-  type Query {
-    users: [User]
-    postsByUser (id: Int): [Post]
-    postsByReviewer (id: Int): [Post]
-  }
+//   type Post {
+//     id: Int
+//     titulo: String
+//     conteudo: String
+//   }
 
-  type Mutation {
-    createUserAndPost (nome: String, email: String, titulo: String, conteudo: String): User
-  }
-`
+//   type Query {
+//     users: [User]
+//     postsByUser (id: Int): [Post]
+//     postsByReviewer (id: Int): [Post]
+//   }
 
-const resolvers = {
-  Query: {
-    users: async () => await prisma.user
-      .findMany({ include: { posts: true }}),
+//   type Mutation {
+//     createUserAndPost (nome: String, email: String, titulo: String, conteudo: String): User
+//   }
+// `
 
-    postsByUser: async (_, args) => {
-      return prisma.user
-        .findUnique({ where: { id: Number(args.id) }}).posts()
-    },
+// const resolvers = {
+//   Query: {
+//     users: async () => await prisma.user
+//       .findMany({ include: { posts: true }}),
 
-    postsByReviewer: async (_, args) => {
-      return prisma.review
-        .findUnique({ where: { id: Number(args.id) }})
-        .reviewer()
-        .posts()
-    }
-  },
-  Mutation: {
-    createUserAndPost: async (_, args) => {
-      const newUser = await prisma.user.create({
-        data: {
-          nome: args.nome,
-          email: args.email,
-          posts: {
-            create: {
-              titulo: args.titulo,
-              conteudo: args.conteudo,
-            }
-          }
-        }
-      })
-      return newUser;
-    }
-  }
-}
+//     postsByUser: async (_, args) => {
+//       return prisma.user
+//         .findUnique({ where: { id: Number(args.id) }}).posts()
+//     },
 
-const server = new ApolloServer({ typeDefs, resolvers })
+//     postsByReviewer: async (_, args) => {
+//       return prisma.review
+//         .findUnique({ where: { id: Number(args.id) }})
+//         .reviewer()
+//         .posts()
+//     }
+//   },
+//   Mutation: {
+//     createUserAndPost: async (_, args) => {
+//       const newUser = await prisma.user.create({
+//         data: {
+//           nome: args.nome,
+//           email: args.email,
+//           posts: {
+//             create: {
+//               titulo: args.titulo,
+//               conteudo: args.conteudo,
+//             }
+//           }
+//         }
+//       })
+//       return newUser;
+//     }
+//   }
+// }
+
+// const server = new ApolloServer({ typeDefs, resolvers })
+
+const server = new ApolloServer({ schema, context: { prisma } })
 server.listen({ port: 4000 }, () => console.log(`Servidor pronto em localhost:4000`)) 
