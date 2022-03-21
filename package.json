@@ -1,0 +1,17 @@
+{
+  "name": "alura-graphql-prisma2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^3.11.0",
+    "apollo-server": "^3.6.4",
+    "nodemon": "^2.0.15"
+  }
+}
