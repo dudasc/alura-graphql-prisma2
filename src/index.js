@@ -1,19 +1,49 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql } = require('apollo-server');
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
 
 const typeDefs = gql`
- type User {
-   name: String
-   age: Int
- }
- type Query {
-   users: [User]
- }
+  scalar DateTime
+
+  type User {
+    id: Int
+    nome: String
+    email: String
+    createdAt: DateTime
+    posts: [Post]
+  }
+
+  type Post {
+    id: Int
+    titulo: String
+    conteudo: String
+  }
+
+  type Query {
+    users: [User]
+    postsByUser (id: Int): [Post]
+    postsByReviewer (id: Int): [Post]
+  }
 `
 
 const resolvers = {
- Query: {
-   users: () => [{ name: "Ana", age: 12 }, {name: "Bia", age: 10 }]
- }
+  Query: {
+    users: async () => await prisma.user
+      .findMany({ include: { posts: true }}),
+
+    postsByUser: async (_, args) => {
+      return prisma.user
+        .findUnique({ where: { id: Number(args.id) }}).posts()
+    },
+
+    postsByReviewer: async (_, args) => {
+      return prisma.review
+        .findUnique({ where: { id: Number(args.id) }})
+        .reviewer()
+        .posts()
+    }
+  }
 }
 
 const server = new ApolloServer({ typeDefs, resolvers })

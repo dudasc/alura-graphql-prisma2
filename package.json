@@ -12,6 +12,7 @@
   "dependencies": {
     "@prisma/client": "^3.11.0",
     "apollo-server": "^3.6.4",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "prisma-client": "^0.0.0"
   }
 }
