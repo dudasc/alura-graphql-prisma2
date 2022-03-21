@@ -9,8 +9,8 @@
 
 declare global {
   interface NexusGenCustomOutputProperties<TypeName extends string> {
+    crud: NexusPrisma<TypeName, 'crud'>
     model: NexusPrisma<TypeName, 'model'>
-    crud: any
   }
 }
 
@@ -20,6 +20,12 @@ declare global {
 
 export interface NexusGenInputs {
   PostWhereUniqueInput: { // input type
+    id?: number | null; // Int
+  }
+  ReviewWhereUniqueInput: { // input type
+    id?: number | null; // Int
+  }
+  UserWhereUniqueInput: { // input type
     id?: number | null; // Int
   }
 }
@@ -78,7 +84,9 @@ export interface NexusGenFieldTypes {
     titulo: string; // String!
   }
   Query: { // field return type
-    users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+    reviews: NexusGenRootTypes['Review'][]; // [Review!]!
+    user: NexusGenRootTypes['User'] | null; // User
+    users: NexusGenRootTypes['User'][]; // [User!]!
   }
   Review: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -106,6 +114,8 @@ export interface NexusGenFieldTypeNames {
     titulo: 'String'
   }
   Query: { // field return type name
+    reviews: 'Review'
+    user: 'User'
     users: 'User'
   }
   Review: { // field return type name
@@ -125,6 +135,23 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
+  Query: {
+    reviews: { // args
+      after?: NexusGenInputs['ReviewWhereUniqueInput'] | null; // ReviewWhereUniqueInput
+      before?: NexusGenInputs['ReviewWhereUniqueInput'] | null; // ReviewWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
+    }
+    user: { // args
+      where: NexusGenInputs['UserWhereUniqueInput']; // UserWhereUniqueInput!
+    }
+    users: { // args
+      after?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
+      before?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
+    }
+  }
   User: {
     posts: { // args
       after?: NexusGenInputs['PostWhereUniqueInput'] | null; // PostWhereUniqueInput
