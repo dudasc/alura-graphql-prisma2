@@ -440,7 +440,7 @@ export interface NexusGenArgTypes {
   }
   Query: {
     buscaAutoresPublicados: { // args
-      email?: string | null; // String
+      email: string; // String!
     }
     reviews: { // args
       after?: NexusGenInputs['ReviewWhereUniqueInput'] | null; // ReviewWhereUniqueInput
