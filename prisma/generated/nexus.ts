@@ -375,6 +375,8 @@ export interface NexusGenFieldTypes {
     titulo: string; // String!
   }
   Query: { // field return type
+    buscaAutoresPublicados: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+    postsAprovados: Array<NexusGenRootTypes['Post'] | null> | null; // [Post]
     reviews: NexusGenRootTypes['Review'][]; // [Review!]!
     user: NexusGenRootTypes['User'] | null; // User
     users: NexusGenRootTypes['User'][]; // [User!]!
@@ -408,6 +410,8 @@ export interface NexusGenFieldTypeNames {
     titulo: 'String'
   }
   Query: { // field return type name
+    buscaAutoresPublicados: 'User'
+    postsAprovados: 'Post'
     reviews: 'Review'
     user: 'User'
     users: 'User'
@@ -435,6 +439,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    buscaAutoresPublicados: { // args
+      email?: string | null; // String
+    }
     reviews: { // args
       after?: NexusGenInputs['ReviewWhereUniqueInput'] | null; // ReviewWhereUniqueInput
       before?: NexusGenInputs['ReviewWhereUniqueInput'] | null; // ReviewWhereUniqueInput
